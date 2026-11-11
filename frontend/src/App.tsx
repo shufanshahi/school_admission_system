@@ -22,7 +22,21 @@ function Shell() {
   return (
     <div className="app">
       <header>
-        <h1>School Admission System</h1>
+        <div className="app-bar">
+          <span className="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 3.5 1.75 8.25 12 13l10.25-4.75L12 3.5Z" fill="currentColor" />
+              <path
+                d="M5 10.6v4.1c0 .5.28.95.73 1.17C7.12 16.6 9.42 17.5 12 17.5s4.88-.9 6.27-1.63c.45-.22.73-.67.73-1.17v-4.1"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+              />
+              <path d="M22 8.5v4.4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          </span>
+          <h1>School Admission System</h1>
+        </div>
         <StudentIdBar />
         <nav aria-label="Main">
           {TABS.map((tab) => (

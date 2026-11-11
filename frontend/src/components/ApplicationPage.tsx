@@ -117,16 +117,15 @@ export function ApplicationPage({ holdId }: { holdId: string }) {
         <dd>{hold.studentId}</dd>
         <dt>Status</dt>
         <dd>{status && <StatusBadge status={status} />}</dd>
-        {status === "HELD" && (
-          <>
-            <dt>Time remaining</dt>
-            <dd>
-              <span className="countdown" data-testid="countdown">{formatRemaining(remaining)}</span>{" "}
-              <span className="hint">Pay before the timer ends or the seat is released.</span>
-            </dd>
-          </>
-        )}
       </dl>
+
+      {status === "HELD" && (
+        <div className="hold-timer">
+          <span className="hold-timer-label">Time remaining</span>
+          <span className="countdown" data-testid="countdown">{formatRemaining(remaining)}</span>
+          <span className="hint">Pay before the timer ends or the seat is released.</span>
+        </div>
+      )}
 
       {status && status !== "HELD" && (
         <p className={status === "CONFIRMED" ? "success" : "notice notice-warn"} role="status" data-testid="terminal-text">

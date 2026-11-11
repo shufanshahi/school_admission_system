@@ -84,7 +84,7 @@ export function ClassList() {
             </thead>
             <tbody>
               {classes.map((c) => (
-                <tr key={c.id} data-testid={`class-row-${c.name}`}>
+                <tr key={c.id} data-testid={`class-row-${c.name}`} data-full={c.availableSeats === 0}>
                   <td>{c.name}</td>
                   <td className="num">{c.totalSeats}</td>
                   <td className="num" data-testid="held">{c.heldSeats}</td>
