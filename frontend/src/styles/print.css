@@ -1,0 +1,16 @@
+/*
+ * Admission letter: when printing, show the letter and nothing else.
+ * The other parts are removed (display: none), not just made invisible, so they leave no blank pages behind.
+ */
+@media print {
+  @page { margin: 16mm; }
+  body { background: #fff !important; }
+  .skip-link, .topbar, .site-header, .site-footer, .toast-region, .page-head,
+  .res-card, .res-links, .letter-toolbar, .strip { display: none !important; }
+  .page-body { padding: 0 !important; }
+  .letter-preview { margin: 0 !important; max-width: none !important; }
+  .letter {
+    padding: 0 !important; border-radius: 0 !important; box-shadow: none !important;
+    background: #fff !important; color: #111 !important;
+  }
+}

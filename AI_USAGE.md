@@ -8,7 +8,7 @@
 
 - **Planning:** turning the brief into a step-by-step plan where every step ends with a concrete check, before writing code.
 - **Code:** most of the backend (endpoints, seat-locking logic, migrations, expiry job), the React UI, the Dockerfiles and compose setup.
-- **Tests:** the 58 backend tests, the 55 frontend tests, and the load and multi-instance scripts.
+- **Tests:** the 58 backend tests, the 66 frontend tests, and the load and multi-instance scripts.
 - **Verification:** running every step against a real database and a real browser (Chrome driven by Playwright) instead of trusting that code looked right.
 - **Explanations:** walking through how each part works, e.g. why the class row lock prevents overselling.
 
@@ -23,6 +23,13 @@
 | The countdown could run **up to a second long** (the server's `Date` header only has one-second precision), and a newly opened hold briefly showed **01:31** for a 90-second hold. | Measuring the shown timer against the true time; a frontend unit test caught the 01:31. | The clock estimate now uses the best of several samples, and the countdown reads the time fresh when it renders. |
 | After the server came back from an outage, the "Can't reach the server" banner **stayed on screen**. | Reviewing the browser test of a server outage. | The lists clear that banner once a refresh succeeds. |
 | The AI **reported a check as passed when it had not**: after killing the backend container it printed "restarted", but that text was hard-coded and the health check had actually returned nothing. | Reading the raw command output instead of the summary. | Re-tested properly. Restart-after-crash could not be simulated without admin rights, so it is reported as **not verified** rather than passed. |
+| The redesign brief the AI wrote itself included **eyebrow labels** above headings and a **thick coloured left border** on toasts. The design skill's quality floor bans both. | The skill's rules were read before any UI code was written. | Both were dropped; the brief file is kept as written, and the build follows the rules. |
+| After a design pass the repo's frontend had **changed since the AI last saw it** (new styles, a `StateBlock` component). | `git log` showed commits the AI had not made. | The current files were read before editing, and the redesign built on them. |
+| On phones the whole site **scrolled sideways**: the header (name, student pill, menu button) needed about 450 px in 330 px. The first captured phone image was 428 px wide for a 390 px screen. | The width of the capture, then a script that listed the elements sticking out. | Shorter pill label on phones, icon-only below 420 px. Re-measured: no overflow on any page at 390 and 360 px. |
+| Numerals in the serif font rendered **old-style** ("Class 11" looked like "Class ıı"). The first fix did not work: the font does contain lining figures, but the CSS `font:` shorthand silently reset the setting on every element that used it. | Zooming into a close-up screenshot, then inspecting the font file's features. | Lining figures re-applied on exactly those elements. |
+| The count badge on the portal showed **pale grey text on gold**, because a broader selector overrode its colour. | A 2x close-up of that one row; it looked fine at normal size. | More specific selector; the close-up now shows dark text on gold. |
+| After the reviewer asked for the hero watermark to go, the AI **deleted its CSS but left the element**, so a 440 px crest landed in the page flow and shoved the whole hero down. | Looking at the recaptured screenshot, not the code. | Element removed; re-captured and checked. |
+| The printable admission letter printed **two pages** (a blank one after it): hiding the rest of the page with `visibility` still left its height behind. | Printing the real page to a PDF and counting pages; the first check had only looked at what was visible. | The other parts are now removed with `display: none` for printing. The PDF is one page containing only the letter. |
 | Several mistakes in **test code**, not the app: two tests shared a student ID in the shared test database; IDs built from a timestamp could collide; a check read the page before it re-rendered; React's automatic retry swallowed a simulated crash. | Failing or suspicious test runs, investigated before changing anything. | Fixed the tests. The app was correct in each case. |
 
 ## How we made sure the tests themselves were meaningful

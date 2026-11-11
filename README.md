@@ -30,11 +30,13 @@ Data lives in the named volume `pgdata`, so it survives restarts and `docker com
 
 ### Using the app
 
-1. Enter a 17-digit birth registration number at the top of the page (for example `20152691234567890`). It is remembered in the browser.
-2. **Create class (Admin):** add a class, e.g. "Class 6 - Morning Shift" with 120 seats.
-3. **Classes:** total, held, confirmed and available seats for every class, refreshed every 3 seconds. Click **Apply**.
-4. **Application:** status and a countdown. **Pay admission fee** confirms the seat (payment is simulated). **Cancel** releases it. When the time runs out the screen shows `EXPIRED` and Pay is disabled, without a reload.
-5. **My applications:** every application of the current student and its status.
+The site is branded **The Imperial School** (a fictional school; every name, fee, date and contact detail on it is illustrative). The real admission tools are on the **Home** page, so they are the first thing a visitor sees.
+
+1. **Home:** enter a 17-digit birth registration number in the **Admissions Portal** (for example `20152691234567890`). It is remembered in the browser, and the header's student pill shows it on every page. The same page lists the live places with **Apply** buttons, and has the school's houses, news, fees and FAQ.
+2. **Registrar (Admin):** add a class, e.g. "Class 6 - Morning Shift" with 120 seats.
+3. **Places & Apply:** total, held, confirmed and available seats for every class, refreshed every 3 seconds, with search, an "only classes with places" filter and sorting. Click **Apply**.
+4. **Your reservation:** status, a countdown ring and a step tracker. **Pay admission fee** confirms the seat (payment is simulated). **Cancel** releases it. When the time runs out the screen shows `EXPIRED` and Pay is disabled, without a reload. Once confirmed, you can copy the reference and print an **admission letter**.
+5. **My Applications:** every application of the current student and its status.
 
 To act as another student, change the number at the top.
 
@@ -70,9 +72,9 @@ docker run --rm --network host -v /var/run/docker.sock:/var/run/docker.sock -v "
 cd backend && dotnet test
 ```
 
-### Frontend: 55 tests (Vitest + React Testing Library)
+### Frontend: 66 tests (Vitest + React Testing Library)
 
-Student ID validation, readable error messages (no seats, expired, server down, invalid input), the countdown flipping to `EXPIRED` and disabling Pay, seat counts refreshing, and the create-class form.
+Student ID validation, readable error messages (no seats, expired, server down, invalid input), the countdown flipping to `EXPIRED` and disabling Pay, seat counts refreshing, the availability badges, and the create-class form.
 
 ```bash
 # with only Docker installed
@@ -136,8 +138,10 @@ backend/
   Dockerfile
 frontend/
   src/api/            API client (friendly errors, server clock)
-  src/components/     screens
+  src/components/     screens (home/, layout/, ui/, brand/ hold the pieces)
+  src/content/        all fictional school content, in one file
   src/hooks/          polling, countdown, routing
+  src/styles/         design tokens, base, components, print (admission letter)
   nginx.conf, docker-entrypoint.sh, Dockerfile
 scripts/              load and multi-instance test scripts
 docker-compose.yml          the app (db, backend, frontend)

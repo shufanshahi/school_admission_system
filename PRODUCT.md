@@ -42,7 +42,14 @@ This is a take-home technical assignment for an Assistant Software Engineer role
 
 ## Brand Commitments
 
-The system is framed as belonging to a fictional school: **Greenfield Scholars' School**. This is an inferred placeholder chosen during init (not the real name of any specific institution) so that future visual work has a concrete identity to anchor to, rather than the generic working title "School Admission System." No logo, color, or typography commitments exist yet — those are visual-world decisions for `new-work`/`document`, not this file. Replace the name here if a different one is preferred.
+The system is framed as belonging to a fictional prestigious boarding school: **The Imperial School** (motto *Virtus et Scientia*, "Virtue and Knowledge"; tagline "Excellence, Character, Service."). It is invented for this demonstration and is not the name of any real institution. These commitments come directly from the user's brief (`frontend-redesign.md`):
+
+- **Feel:** a rich, posh, long-established boarding school. Calm, spacious, formal but warm. It should look sellable as a product.
+- **Colour:** dark navy ground with a single gold accent and ivory text. Deep navy (#060D1F to #163063), gold (#C9A75A), ivory (#F5F0E6).
+- **Type:** Cormorant Garamond for headings and display, Inter for the interface, both self-hosted.
+- **Crest:** an inline-SVG shield with a gold laurel wreath around a serif "I" and a small crown.
+- **Home page leads with the working tool:** the Admissions Portal (student-number field and links) sits in the first viewport; the guardian can act without scrolling.
+- **All school content is fictional and illustrative** (houses, fees, news, contact details) and lives in one file, `frontend/src/content/site.ts`.
 
 ## Evidence on Hand
 

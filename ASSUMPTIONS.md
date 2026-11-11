@@ -39,12 +39,18 @@ Tested with two backends on one database: 1000 students, 50 seats, exactly 50 su
 
 - Class names are trimmed, 1–200 characters, and need not be unique. Seats must be a whole number from 1 to 100,000. *Reason:* sensible limits; the brief sets none.
 - Classes cannot be edited or deleted. *Reason:* not in the brief, and changing seat counts under live holds needs its own rules.
-- The class list is in creation order; "My applications" shows the newest first.
+- The places board lists classes in the order they were added by default (it can also sort by name or by most places available); "My Applications" shows the newest first.
 
 ## User interface
 
 - Seat counts and application lists refresh every **3 seconds** by polling. *Reason:* the brief asks for updates "every few seconds"; polling is simple and robust.
-- The countdown follows the **server's clock** (learned from each response's `Date` header), so a wrong clock on the user's computer does not matter. Because that header has one-second precision, the screen can show `EXPIRED` up to about a second after the server does, never before. The server stays the authority: a late payment is refused with a clear message.
+- The countdown follows the **server's clock** (learned from each response's `Date` header), so a wrong clock on the user's computer does not matter. Because that header has one-second precision, the screen can show `EXPIRED` up to about two seconds after the server does when a page has just loaded (it converges within a few seconds), never before. The server stays the authority: a late payment is refused with a clear message.
 - The student ID is kept in the browser's `localStorage`, and applications are always loaded from the server, so they survive a refresh or reopening the browser.
 - Cancel asks for confirmation first, because it gives the seat away.
 - Payment is simulated: **Pay admission fee** simply confirms.
+
+## Branding and content
+
+- The product is branded **The Imperial School**, a fictional school invented for this demonstration. Its houses, mottos, fees, news items, address, phone number and email are made up and live in one file (`frontend/src/content/site.ts`) so they are easy to replace. The email uses the reserved `.example` domain so it can never reach a real inbox.
+- The fee table, news and FAQ are static illustrations. Only the admission features (classes, places, reservations, payment, cancellation) talk to the backend.
+- The printable admission letter is generated in the browser from the confirmed application. It is marked as a demonstration document and carries no legal weight.

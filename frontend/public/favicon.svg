@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 76">
+  <path d="M32 2 58 10v26c0 17.500-11.500 29.500-26 38C17.500 65.500 6 53.500 6 36V10L32 2Z" fill="#0a1630" stroke="#c9a75a" stroke-width="3.2" stroke-linejoin="round"/>
+  <path d="M23 21.500 24.800 12.500 28.600 17 32 10.500 35.400 17 39.200 12.500 41 21.500Z" fill="#c9a75a"/>
+  <text x="32" y="56" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="34" fill="#e3c98a">I</text>
+</svg>

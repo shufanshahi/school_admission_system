@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { createClass } from "../api/client";
 import { useNotifications } from "../context/NotificationContext";
+import { PageHeader } from "./layout/PageHeader";
 
 const MAX_NAME = 200;
 const MAX_SEATS = 100_000;
@@ -46,55 +47,74 @@ export function CreateClassForm() {
 
   return (
     <section>
-      <h2>Create class (school admin)</h2>
-      <p className="hint">Each shift is its own class, e.g. “Class 6 - Morning Shift” and “Class 6 - Day Shift”.</p>
+      <PageHeader
+        title="Registrar's Office"
+        lead="Admin area. Add the classes that families can apply for. There is no login in this demonstration."
+      />
 
-      <form onSubmit={onSubmit} noValidate className="form">
-        <div className="field">
-          <label htmlFor="class-name">Class name</label>
-          <input
-            id="class-name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Class 6 - Morning Shift"
-            aria-invalid={!!errors.name}
-            aria-describedby={errors.name ? "class-name-error" : undefined}
-          />
-          {errors.name && (
-            <span id="class-name-error" className="field-error" role="alert">
-              {errors.name}
-            </span>
+      <div className="container page-body registrar">
+        <div className="form-card">
+          <form onSubmit={onSubmit} noValidate className="form">
+            <div className="field">
+              <label htmlFor="class-name">Class name</label>
+              <input
+                id="class-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Class 6 - Morning Shift"
+                aria-invalid={!!errors.name}
+                aria-describedby={errors.name ? "class-name-error" : undefined}
+              />
+              {errors.name && (
+                <span id="class-name-error" className="field-error" role="alert">
+                  {errors.name}
+                </span>
+              )}
+            </div>
+
+            <div className="field">
+              <label htmlFor="class-seats">Total seats</label>
+              <input
+                id="class-seats"
+                inputMode="numeric"
+                value={seats}
+                onChange={(e) => setSeats(e.target.value)}
+                placeholder="120"
+                aria-invalid={!!errors.seats}
+                aria-describedby={errors.seats ? "class-seats-error" : undefined}
+              />
+              {errors.seats && (
+                <span id="class-seats-error" className="field-error" role="alert">
+                  {errors.seats}
+                </span>
+              )}
+            </div>
+
+            <button type="submit" className="btn btn-primary" disabled={submitting}>
+              {submitting ? "Creating…" : "Create class"}
+            </button>
+          </form>
+
+          {created && (
+            <p className="success" role="status" data-testid="created">
+              {created}. <a href="#/classes">See it on the places board</a>.
+            </p>
           )}
         </div>
 
-        <div className="field">
-          <label htmlFor="class-seats">Total seats</label>
-          <input
-            id="class-seats"
-            inputMode="numeric"
-            value={seats}
-            onChange={(e) => setSeats(e.target.value)}
-            placeholder="120"
-            aria-invalid={!!errors.seats}
-            aria-describedby={errors.seats ? "class-seats-error" : undefined}
-          />
-          {errors.seats && (
-            <span id="class-seats-error" className="field-error" role="alert">
-              {errors.seats}
-            </span>
-          )}
-        </div>
-
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Creating…" : "Create class"}
-        </button>
-      </form>
-
-      {created && (
-        <p className="success" role="status" data-testid="created">
-          {created}. <a href="#/classes">See it in the class list</a>.
-        </p>
-      )}
+        <aside className="registrar-note" aria-label="Naming classes">
+          <h2>Naming classes</h2>
+          <p className="muted">
+            Each shift is its own class with its own places, so name them for the grade and the shift:
+          </p>
+          <ul>
+            <li>Class 6 - Morning Shift</li>
+            <li>Class 6 - Day Shift</li>
+            <li>Class 9 - Science, Morning</li>
+          </ul>
+          <p className="muted">Places can't be changed once families start applying, so check the number first.</p>
+        </aside>
+      </div>
     </section>
   );
 }
