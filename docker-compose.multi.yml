@@ -1,0 +1,18 @@
+# Optional: a SECOND backend process on port 8081, sharing the same database.
+# Used to show that seats are never oversold even with several backends (bonus, brief §1.6).
+#
+#   docker compose -f docker-compose.yml -f docker-compose.multi.yml up --build -d
+#   ./scripts/multi-instance-test.sh
+#
+services:
+  backend2:
+    build: ./backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__Default: "Host=db;Port=5432;Database=admission;Username=admission;Password=admission"
+      HOLD_DURATION_SECONDS: "600"
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
