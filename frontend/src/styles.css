@@ -39,6 +39,10 @@
   --shadow-sm: 0 1px 2px rgba(20, 30, 50, .05), 0 3px 10px rgba(20, 30, 50, .05);
   --shadow-md: 0 2px 4px rgba(20, 30, 50, .05), 0 10px 26px rgba(20, 30, 50, .08);
 
+  /* --- Motion: strong custom curves, short durations --- */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   /* --- Type roles: one family, deliberate size + weight + tracking per job --- */
@@ -147,9 +151,11 @@ button {
   min-height: 40px; padding: 9px 16px;
   border: 1px solid transparent; border-radius: var(--r-sm);
   background: var(--primary); color: #fff; cursor: pointer;
-  transition: background .14s ease, border-color .14s ease, box-shadow .14s ease;
+  transition: background .14s ease, border-color .14s ease, box-shadow .14s ease,
+    transform .14s var(--ease-out);
 }
 button:hover:not(:disabled) { background: var(--primary-dark); }
+button:active:not(:disabled) { transform: scale(0.97); }
 button:disabled { background: var(--disabled-bg); color: #fff; cursor: not-allowed; }
 button.secondary { background: #fff; color: var(--primary); border-color: var(--line-strong); }
 button.secondary:hover:not(:disabled) { background: var(--primary-050); border-color: var(--primary); }
@@ -158,8 +164,10 @@ button.secondary:disabled { color: var(--disabled-fg); border-color: var(--line)
   min-height: 32px; min-width: 32px; padding: 6px; border-radius: var(--r-xs);
   background: none; color: inherit; font-weight: var(--fw-medium);
   display: inline-grid; place-items: center; flex: none;
+  transition: background .14s ease, transform .14s var(--ease-out);
 }
 .link-button:hover:not(:disabled) { background: rgba(20, 30, 50, .08); }
+.link-button:active:not(:disabled) { transform: scale(0.92); }
 
 /* ---- Nav: segmented control ---- */
 nav {
@@ -171,9 +179,10 @@ nav {
   padding: 8px 14px; border-radius: var(--r-sm);
   font-size: var(--fs-small); font-weight: var(--fw-semibold); text-decoration: none;
   color: var(--muted); border: 1px solid transparent;
-  transition: background .14s ease, color .14s ease;
+  transition: background .14s ease, color .14s ease, transform .14s var(--ease-out);
 }
 .tab:hover:not(.active) { color: var(--text-strong); background: rgba(20, 30, 50, .04); }
+.tab:active { transform: scale(0.97); }
 .tab.active { background: var(--card); color: var(--primary); box-shadow: var(--shadow-xs); }
 
 /* ---- Notices / banners ---- */
@@ -345,4 +354,43 @@ section > p.hint { color: var(--text-subtle); }
   .actions { flex-direction: column; }
   .actions button, .form button { width: 100%; }
   .student-bar input { max-width: 100%; }
+}
+
+/* =========================================================================
+   Motion — restrained and purposeful. Each animation answers "why?":
+   entrance prevents jarring swaps, press feedback confirms the tap, the
+   loading dot shows work in progress. The ticking countdown never animates.
+   ========================================================================= */
+
+/* The one authored moment: screen content settles in on arrival. */
+main > section { animation: screen-enter 260ms var(--ease-out) both; }
+@keyframes screen-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* A notice should arrive, not blink into place. */
+.app > .notice { animation: notice-in 200ms var(--ease-out) both; }
+@keyframes notice-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Loading indicator: a slow, calm pulse — work is happening. */
+.state-dot { animation: dot-pulse 1150ms var(--ease-in-out) infinite; }
+@keyframes dot-pulse {
+  0%, 100% { opacity: .35; transform: scale(.8); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Keep comprehension-aiding fades; drop all movement and scale. */
+  main > section { animation: fade-in 200ms ease both; }
+  .app > .notice { animation: fade-in 200ms ease both; }
+  .state-dot { animation: dot-fade 1150ms ease-in-out infinite; }
+  button:active:not(:disabled),
+  .tab:active,
+  .link-button:active:not(:disabled) { transform: none; }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes dot-fade { 0%, 100% { opacity: .4; } 50% { opacity: 1; } }
 }
