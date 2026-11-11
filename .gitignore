@@ -1,2 +1,10 @@
 assignment-brief.md
 implementations.md
+bin/
+obj/
+node_modules/
+dist/
+.env
+*.user
+.vs/
+.idea/
