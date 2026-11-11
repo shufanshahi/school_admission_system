@@ -1,0 +1,6 @@
+**/bin/
+**/obj/
+SchoolAdmission.Tests/
+*.md
+Dockerfile
+.dockerignore
