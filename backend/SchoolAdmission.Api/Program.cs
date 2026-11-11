@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using SchoolAdmission.Api;
+using SchoolAdmission.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 var bootstrapLogger = LoggerFactory.Create(b => b.AddConsole()).CreateLogger("Startup");
 var holdOptions = HoldOptions.FromConfiguration(builder.Configuration, bootstrapLogger);
 builder.Services.AddSingleton(holdOptions);
+
+builder.Services.AddDbContext<AdmissionDbContext>(o =>
+    o.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
 var app = builder.Build();
 
