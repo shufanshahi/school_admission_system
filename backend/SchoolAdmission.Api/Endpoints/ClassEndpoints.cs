@@ -12,6 +12,19 @@ public static class ClassEndpoints
     public static void MapClassEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("/classes", CreateClass);
+        app.MapGet("/classes", ListClasses);
+        app.MapGet("/classes/{classId}", GetClass);
+    }
+
+    private static async Task<IResult> ListClasses(AdmissionDbContext db, CancellationToken ct)
+        => Results.Ok(await ClassQueries.ListAsync(db, ct));
+
+    private static async Task<IResult> GetClass(string classId, AdmissionDbContext db, CancellationToken ct)
+    {
+        var result = await ClassQueries.GetAsync(db, classId, ct);
+        if (result is null)
+            throw ApiException.NotFound("CLASS_NOT_FOUND", "We couldn't find that class.");
+        return Results.Ok(result);
     }
 
     // The body is read as raw JSON so we can tell the user exactly which field is wrong
