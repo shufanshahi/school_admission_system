@@ -1,5 +1,5 @@
-# assignment-brief.md
-# implementations.md
+assignment-brief.md
+implementations.md
 bin/
 obj/
 node_modules/
@@ -11,3 +11,16 @@ dist/
 
 # local dev overrides
 docker-compose.override.yml
+
+# AI tooling and editor config: not part of the project
+.agents/
+.claude/
+.codex/
+.vscode/
+.impeccable/
+skills-lock.json
+
+# internal planning and design-tool documents (kept locally, not part of the submission)
+PRODUCT.md
+DESIGN.md
+frontend-redesign.md
