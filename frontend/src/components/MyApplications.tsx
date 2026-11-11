@@ -1,0 +1,102 @@
+import { useRef, useState } from "react";
+import { errorMessage, myHolds } from "../api/client";
+import type { MyHold } from "../api/types";
+import { useNotifications } from "../context/NotificationContext";
+import { useStudent } from "../context/StudentContext";
+import { useNow } from "../hooks/useNow";
+import { usePolling } from "../hooks/usePolling";
+import { effectiveStatus, formatRemaining, remainingMs } from "../lib/hold";
+import { StatusBadge } from "./StatusBadge";
+
+const POLL_MS = 3000;
+
+export function MyApplications() {
+  const { studentId, isValid } = useStudent();
+  const { notifyError, dismiss } = useNotifications();
+
+  const [holds, setHolds] = useState<MyHold[] | null>(null);
+  const [refreshError, setRefreshError] = useState<string | null>(null);
+  const failedBefore = useRef(false);
+  const currentStudent = useRef(studentId);
+  currentStudent.current = studentId;
+
+  const now = useNow(500);
+
+  usePolling(
+    async () => {
+      const asking = studentId;
+      try {
+        const result = await myHolds(asking);
+        if (currentStudent.current !== asking) return;   // the user switched student while we waited
+        setHolds(result);
+        setRefreshError(null);
+        if (failedBefore.current) dismiss();   // the "can't reach the server" banner is out of date now
+        failedBefore.current = false;
+      } catch (error) {
+        if (currentStudent.current !== asking) return;
+        setRefreshError(errorMessage(error));
+        if (!failedBefore.current) notifyError(error);
+        failedBefore.current = true;
+      }
+    },
+    POLL_MS,
+    isValid,
+  );
+
+  if (!isValid)
+    return (
+      <section>
+        <h2>My applications</h2>
+        <p className="hint" data-testid="id-hint">
+          Enter your birth registration number above to see your applications.
+        </p>
+      </section>
+    );
+
+  return (
+    <section>
+      <h2>My applications</h2>
+
+      {refreshError && (
+        <p className="notice notice-warn" role="status" data-testid="refresh-error">
+          Couldn't refresh your applications, so the list may be out of date. {refreshError} Trying again…
+        </p>
+      )}
+
+      {holds === null && !refreshError && <p>Loading your applications…</p>}
+      {holds?.length === 0 && (
+        <p data-testid="no-applications">
+          You have no applications yet. <a href="#/classes">Browse classes</a> to apply.
+        </p>
+      )}
+
+      {holds && holds.length > 0 && (
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Status</th>
+                <th>Time remaining</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {holds.map((h) => {
+                const status = effectiveStatus(h.status, h.expiresAt, now);
+                return (
+                  <tr key={h.holdId} data-testid={`application-${h.holdId}`}>
+                    <td>{h.className}</td>
+                    <td><StatusBadge status={status} /></td>
+                    <td>{status === "HELD" ? formatRemaining(remainingMs(h.expiresAt, now)) : "—"}</td>
+                    <td><a href={`#/applications/${encodeURIComponent(h.holdId)}`}>Open</a></td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+  );
+}

@@ -5,8 +5,9 @@ services:
       POSTGRES_USER: admission
       POSTGRES_PASSWORD: admission
       POSTGRES_DB: admission
-    ports:
-      - "5432:5432"        # exposed for local development; change the left side if 5432 is busy
+    # No "ports:" on purpose: the backend reaches the database over the compose network, and
+    # publishing 5432 would clash with any PostgreSQL already running on the host.
+    # For local development, docker-compose.override.yml (git-ignored) publishes it on 5433.
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:

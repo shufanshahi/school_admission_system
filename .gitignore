@@ -8,3 +8,6 @@ dist/
 *.user
 .vs/
 .idea/
+
+# local dev overrides
+docker-compose.override.yml
