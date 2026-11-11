@@ -38,6 +38,10 @@ The site is branded **The Imperial School** (a fictional school; every name, fee
 4. **Your reservation:** status, a countdown ring and a step tracker. **Pay admission fee** confirms the seat (payment is simulated). **Cancel** releases it. When the time runs out the screen shows `EXPIRED` and Pay is disabled, without a reload. Once confirmed, you can copy the reference and print an **admission letter**.
 5. **My Applications:** every application of the current student and its status.
 
+### Demo data
+
+A new database starts empty. `./scripts/seed-demo.sh` fills it with a realistic fictional school: 14 classes and 671 confirmed admissions, through the real API. See [DEMO.md](DEMO.md) for the two demo student numbers and a short guide to trying the system. `./scripts/seed-demo.sh --reset` wipes everything first, after asking for confirmation. It is deliberately separate from `docker compose up`, so the API starts clean for automated tests.
+
 To act as another student, change the number at the top.
 
 ---
