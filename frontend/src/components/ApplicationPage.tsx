@@ -6,6 +6,7 @@ import { useStudent } from "../context/StudentContext";
 import { useCountdown } from "../hooks/useCountdown";
 import { usePolling } from "../hooks/usePolling";
 import { formatRemaining } from "../lib/hold";
+import { LoadingBlock } from "./StateBlock";
 import { StatusBadge } from "./StatusBadge";
 
 const POLL_MS = 3000;
@@ -95,7 +96,7 @@ export function ApplicationPage({ holdId }: { holdId: string }) {
         {loadError ? (
           <p className="notice notice-error" role="alert">{loadError} Trying again…</p>
         ) : (
-          <p>Loading application…</p>
+          <LoadingBlock>Loading application…</LoadingBlock>
         )}
       </section>
     );

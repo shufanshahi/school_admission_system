@@ -5,6 +5,7 @@ import { useNotifications } from "../context/NotificationContext";
 import { useStudent } from "../context/StudentContext";
 import { goToApplication } from "../hooks/useHashRoute";
 import { usePolling } from "../hooks/usePolling";
+import { ClassesIcon, LoadingBlock, StateBlock } from "./StateBlock";
 
 const POLL_MS = 3000;
 
@@ -65,9 +66,13 @@ export function ClassList() {
         </p>
       )}
 
-      {classes === null && !refreshError && <p>Loading classes…</p>}
+      {classes === null && !refreshError && <LoadingBlock>Loading classes…</LoadingBlock>}
       {classes === null && refreshError && <p>No class information to show yet.</p>}
-      {classes?.length === 0 && <p data-testid="no-classes">No classes yet. An admin can add one in “Create class”.</p>}
+      {classes?.length === 0 && (
+        <StateBlock icon={ClassesIcon} testId="no-classes">
+          No classes yet. An admin can add one in “Create class”.
+        </StateBlock>
+      )}
 
       {classes && classes.length > 0 && (
         <div className="table-wrap">
@@ -86,10 +91,10 @@ export function ClassList() {
               {classes.map((c) => (
                 <tr key={c.id} data-testid={`class-row-${c.name}`} data-full={c.availableSeats === 0}>
                   <td>{c.name}</td>
-                  <td className="num">{c.totalSeats}</td>
-                  <td className="num" data-testid="held">{c.heldSeats}</td>
-                  <td className="num" data-testid="confirmed">{c.confirmedSeats}</td>
-                  <td className="num" data-testid="available"><strong>{c.availableSeats}</strong></td>
+                  <td className="num" data-label="Total">{c.totalSeats}</td>
+                  <td className="num" data-label="Held" data-testid="held">{c.heldSeats}</td>
+                  <td className="num" data-label="Confirmed" data-testid="confirmed">{c.confirmedSeats}</td>
+                  <td className="num" data-label="Available" data-testid="available"><strong>{c.availableSeats}</strong></td>
                   <td>
                     <button
                       type="button"

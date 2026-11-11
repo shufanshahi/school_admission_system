@@ -73,7 +73,8 @@ body {
 
 /* Browser surfaces — themed, not left to the UA */
 ::selection { background: var(--primary-100); color: var(--primary-dark); }
-:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ring); border-radius: var(--r-xs); }
+/* Ring follows each element's own radius; no global radius override. */
+:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ring); }
 a:focus-visible { border-radius: 3px; }
 
 .app { max-width: 960px; margin: 0 auto; padding: var(--s6) var(--s4) var(--s8); }
@@ -154,9 +155,9 @@ button.secondary { background: #fff; color: var(--primary); border-color: var(--
 button.secondary:hover:not(:disabled) { background: var(--primary-050); border-color: var(--primary); }
 button.secondary:disabled { color: var(--disabled-fg); border-color: var(--line); background: var(--disabled-soft); }
 .link-button {
-  min-height: 0; padding: 6px; border-radius: var(--r-xs);
-  background: none; color: inherit; font-weight: 500;
-  display: inline-grid; place-items: center;
+  min-height: 32px; min-width: 32px; padding: 6px; border-radius: var(--r-xs);
+  background: none; color: inherit; font-weight: var(--fw-medium);
+  display: inline-grid; place-items: center; flex: none;
 }
 .link-button:hover:not(:disabled) { background: rgba(20, 30, 50, .08); }
 
@@ -281,3 +282,67 @@ main > section > p:last-child a { font-weight: 500; }
 /* ---- Empty / loading copy ---- */
 section > p { color: var(--muted); max-width: 66ch; text-wrap: pretty; }
 section > p.hint { color: var(--text-subtle); }
+
+/* Loading and empty states read as intentional panels, not leftover text. */
+.state-block {
+  display: grid; justify-items: center; gap: var(--s2);
+  text-align: center; max-width: 42ch; margin: var(--s2) auto;
+  padding: var(--s7) var(--s4);
+  color: var(--muted); text-wrap: pretty;
+}
+.state-block .state-icon {
+  width: 40px; height: 40px; margin-bottom: var(--s1);
+  display: grid; place-items: center; border-radius: var(--r-md);
+  background: var(--surface-sunken); color: var(--text-subtle);
+}
+.state-block .state-icon svg { width: 22px; height: 22px; }
+.state-block .state-text { line-height: 1.5; }
+.state-dot {
+  width: 9px; height: 9px; border-radius: 50%; background: var(--primary);
+  box-shadow: 0 0 0 0 var(--ring);
+}
+
+/* ---- Responsive: stacked cards replace scrolling tables on phones ---- */
+@media (max-width: 560px) {
+  .app { padding: var(--s4) var(--s3) var(--s7); }
+  header { padding: var(--s4); }
+  main { padding: var(--s5) var(--s4); }
+
+  .table-wrap { border: 0; background: transparent; overflow: visible; }
+  .table-wrap table, .table-wrap tbody, .table-wrap tr, .table-wrap td { display: block; width: 100%; }
+  .table-wrap thead { display: none; }
+  .table-wrap tr {
+    border: 1px solid var(--line-soft); border-radius: var(--r-md);
+    background: var(--card); box-shadow: var(--shadow-xs);
+    padding: var(--s3) var(--s4); margin-bottom: var(--s3);
+  }
+  .table-wrap tr:hover { background: var(--card); }
+  .table-wrap tr:last-child { margin-bottom: 0; }
+  .table-wrap td {
+    display: flex; justify-content: space-between; align-items: center; gap: var(--s4);
+    padding: 7px 0; border-top: 1px solid var(--line-soft); text-align: right;
+  }
+  .table-wrap td::before {
+    content: attr(data-label); flex: none; text-align: left;
+    font-size: var(--fs-caption); font-weight: var(--fw-bold);
+    text-transform: uppercase; letter-spacing: .05em; color: var(--text-subtle);
+  }
+  .table-wrap td:first-child {
+    border-top: 0; padding-top: 0; font-size: 1.02rem;
+    justify-content: flex-start;
+  }
+  .table-wrap td:first-child::before { content: none; }
+  .table-wrap td.num strong { font-size: 1.02rem; }
+  .table-wrap td:last-child { border-top: 0; padding-top: var(--s3); }
+  .table-wrap td:last-child::before { content: none; }
+  .table-wrap td:last-child button,
+  .table-wrap td:last-child a { width: 100%; text-align: center; }
+  .table-wrap td:last-child a {
+    display: block; padding: 9px; border: 1px solid var(--line-strong);
+    border-radius: var(--r-sm); text-decoration: none; font-weight: var(--fw-semibold);
+  }
+
+  .actions { flex-direction: column; }
+  .actions button, .form button { width: 100%; }
+  .student-bar input { max-width: 100%; }
+}

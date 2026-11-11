@@ -6,6 +6,7 @@ import { useStudent } from "../context/StudentContext";
 import { useNow } from "../hooks/useNow";
 import { usePolling } from "../hooks/usePolling";
 import { effectiveStatus, formatRemaining, remainingMs } from "../lib/hold";
+import { ApplicationsIcon, LoadingBlock, StateBlock } from "./StateBlock";
 import { StatusBadge } from "./StatusBadge";
 
 const POLL_MS = 3000;
@@ -63,11 +64,11 @@ export function MyApplications() {
         </p>
       )}
 
-      {holds === null && !refreshError && <p>Loading your applications…</p>}
+      {holds === null && !refreshError && <LoadingBlock>Loading your applications…</LoadingBlock>}
       {holds?.length === 0 && (
-        <p data-testid="no-applications">
+        <StateBlock icon={ApplicationsIcon} testId="no-applications">
           You have no applications yet. <a href="#/classes">Browse classes</a> to apply.
-        </p>
+        </StateBlock>
       )}
 
       {holds && holds.length > 0 && (
@@ -87,8 +88,8 @@ export function MyApplications() {
                 return (
                   <tr key={h.holdId} data-testid={`application-${h.holdId}`}>
                     <td>{h.className}</td>
-                    <td><StatusBadge status={status} /></td>
-                    <td>{status === "HELD" ? formatRemaining(remainingMs(h.expiresAt, now)) : "—"}</td>
+                    <td data-label="Status"><StatusBadge status={status} /></td>
+                    <td data-label="Time remaining">{status === "HELD" ? formatRemaining(remainingMs(h.expiresAt, now)) : "—"}</td>
                     <td><a href={`#/applications/${encodeURIComponent(h.holdId)}`}>Open</a></td>
                   </tr>
                 );
