@@ -114,7 +114,7 @@ export function ApplicationPage({ holdId }: { holdId: string }) {
         <dt>Class</dt>
         <dd>{hold.className}</dd>
         <dt>Student</dt>
-        <dd>{hold.studentId}</dd>
+        <dd className="id-value">{hold.studentId}</dd>
         <dt>Status</dt>
         <dd>{status && <StatusBadge status={status} />}</dd>
       </dl>
