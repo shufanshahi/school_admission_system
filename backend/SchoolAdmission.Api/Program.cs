@@ -14,6 +14,11 @@ builder.Services.AddDbContext<AdmissionDbContext>(o =>
 
 var app = builder.Build();
 
+// Create/upgrade the schema before serving traffic (retries until Postgres is reachable).
+await DatabaseMigrator.MigrateWithRetryAsync(
+    app.Services,
+    app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Migrations"));
+
 app.MapGet("/", () => "Hello World!");
 
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
