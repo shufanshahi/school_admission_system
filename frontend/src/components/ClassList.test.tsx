@@ -28,14 +28,26 @@ describe("ClassList", () => {
     expect(within(row(morning.name)).getByRole("button", { name: "Apply" })).toBeEnabled();
   });
 
-  test("Apply is disabled until a valid student id is entered, and says why", async () => {
-    mockBackend({ "GET /classes": () => json(200, [morning]) });
+  test("pressing Apply without a student number explains what to enter and where, and sends nothing", async () => {
+    const fetchMock = mockBackend({ "GET /classes": () => json(200, [morning]) });
     renderWithProviders(<ClassList />);
 
-    await screen.findByText(morning.name);
-    const button = within(row(morning.name)).getByRole("button", { name: "Apply" });
-    expect(button).toBeDisabled();
-    expect(button).toHaveAttribute("title", "Enter your 17-digit birth registration number first");
+    const button = within(row((await screen.findByText(morning.name)).textContent!)).getByRole("button", { name: "Apply" });
+    expect(button).toBeEnabled();   // not greyed out: pressing it is how the user learns what to do
+    await userEvent.click(button);
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent("Please enter the student's 17-digit birth registration number first.");
+    expect(alert).toHaveTextContent('"Student ID" box');   // says where
+    expect(fetchMock.mock.calls.some(([, init]) => (init as RequestInit)?.method === "POST")).toBe(false);
+  });
+
+  test("a half-typed number is told how many digits it has", async () => {
+    mockBackend({ "GET /classes": () => json(200, [morning]) });
+    renderWithProviders(<ClassList />, { studentId: "2015269" });
+
+    await userEvent.click(await screen.findByRole("button", { name: "Apply" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("must be exactly 17 digits (you have entered 7)");
   });
 
   test("applying sends the student id and opens the application screen", async () => {
