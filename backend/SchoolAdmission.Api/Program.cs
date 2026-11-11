@@ -58,13 +58,6 @@ app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 app.MapClassEndpoints();
 app.MapHoldEndpoints();
 
-// TEMPORARY (Step B2): remove before the final commit.
-app.MapGet("/debug/config", (HoldOptions hold, IConfiguration config) => Results.Ok(new
-{
-    holdDurationSeconds = hold.DurationSeconds,
-    connectionStringConfigured = !string.IsNullOrWhiteSpace(config.GetConnectionString("Default"))
-}));
-
 app.Run();
 
 // Makes Program visible to WebApplicationFactory<Program> in the test project.
