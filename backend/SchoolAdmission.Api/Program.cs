@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SchoolAdmission.Api;
 using SchoolAdmission.Api.Data;
+using SchoolAdmission.Api.Endpoints;
 using SchoolAdmission.Api.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +39,8 @@ await DatabaseMigrator.MigrateWithRetryAsync(
 app.MapGet("/", () => "Hello World!");
 
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+
+app.MapClassEndpoints();
 
 // TEMPORARY (Step B2): remove before the final commit.
 app.MapGet("/debug/config", (HoldOptions hold, IConfiguration config) => Results.Ok(new
